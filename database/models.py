@@ -22,7 +22,7 @@ class User(Base):
 class TimeInfo(Base):
     __tablename__ = 'time_info'
 
-    id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
+    id = Column(Integer, nullable=False, unique=True, primary_key=True)
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     retire_time = Column(DateTime(timezone=True), default=func.now())
     wakeup_time = Column(DateTime(timezone=True), default=func.now())
