@@ -1,4 +1,8 @@
 # YOUR STATES HERE
-NAME = "NAME"
-LAST_NAME = "LAST_NAME"
-GENDER = "GENDER"
+import enum
+
+
+class States(enum.Enum):
+    START = "START"
+    NICKNAME = "NICKNAME"
+
