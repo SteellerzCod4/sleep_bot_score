@@ -1,5 +1,6 @@
 from database import get_db
 from database.models import User
+from bot_configs.states import States
 
 db = get_db()
 
@@ -16,10 +17,10 @@ def get_user_state(user_id: int):
     if not user:
         return None
 
-    return user.state
+    return States(user.state)
 
 
-def set_user_state(user_id: int, value: str):
+def set_user_state(user_id: int, value: States):
     """ Устанавливает состояние пользователя """
     user = get_user_by_id(user_id)
     if not user:
