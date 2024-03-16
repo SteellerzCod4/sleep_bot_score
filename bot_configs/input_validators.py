@@ -9,5 +9,5 @@ def is_correct_age(input_age: str):
 def is_correct_time(best_time: str):
     if ":" in best_time:
         hours, minutes = best_time.split(":")
-        return hours.isdigit() and minutes.isdigite and 0 <= int(hours) <= 23 and 0 <= int(minutes) <= 59
+        return hours.isdigit() and minutes.isdigit() and 0 <= int(hours) <= 23 and 0 <= int(minutes) <= 59
     return False

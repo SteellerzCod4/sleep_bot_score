@@ -1,5 +1,5 @@
 from database import get_db
-from database.models import User
+from database.models import User, TimeInfo
 from bot_configs.states import States
 
 db = get_db()
@@ -33,19 +33,6 @@ def set_user_state(user_id: int, value: States):
     return user
 
 
-def set_user_best_retire_time(user_id: int, value: str):
-    """ Устанавливает состояние пользователя """
-    user = get_user_by_id(user_id)
-    if not user:
-        user = User(id=user_id, state=value)
-        db.add(user)
-
-    user.state = value
-    db.commit()
-
-    return user
-
-
 def set_user_name(user_id: int, user_name: str):
     """ Устанавливает имя пользователя """
     user = get_user_by_id(user_id)
@@ -59,35 +46,22 @@ def set_user_name(user_id: int, user_name: str):
     return user
 
 
-def set_user_last_name(user_id: int, user_last_name: str):
-    """ Устанавливает фамилию пользователя """
-    user = get_user_by_id(user_id)
-    if not user:
-        user = User(id=user_id, last_name=user_last_name)
-        db.add(user)
+def get_timeinfo_by_user_id(user_id: int):
+    return db.query(TimeInfo).filter(TimeInfo.user_id == user_id).first()
 
-    user.last_name = user_last_name
+
+def set_user_best_retire_time(user_id: int, best_retire_time):
+    time_info = get_timeinfo_by_user_id(user_id)
+    time_info.retire_time = best_retire_time
     db.commit()
-
-    return user
-
-
-def set_user_gender(user_id: int, user_gender: str):
-    """ Устанавливает пол пользователя """
-    user = get_user_by_id(user_id)
-    if not user:
-        user = User(id=user_id, gender=user_gender)
-        db.add(user)
-
-    user.gender = user_gender
-    db.commit()
-
-    return user
 
 
 def create_new_user(user_id: int):
     user = get_user_by_id(user_id)
     if not user:
         user = User(id=user_id, state="START")
+        time_info = TimeInfo(user_id=user_id)
+
         db.add(user)
+        db.add(time_info)
         db.commit()

@@ -62,7 +62,7 @@ async def handle_messages(message: types.Message):
         States.NAME_REG: input_name,
         States.AGE_REG: input_age,
         States.BEST_RETIRE_TIME_REG: input_best_retire_time,
-        States.BEST_WAKEUP_TIME_REG: input_best_wakeup_time,
+        #States.BEST_WAKEUP_TIME_REG: input_best_wakeup_time,
         States.START: process_main_keyboard# добавить все остальные состояния
     }
 
