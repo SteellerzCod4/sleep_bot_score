@@ -33,6 +33,19 @@ def set_user_state(user_id: int, value: States):
     return user
 
 
+def set_user_best_retire_time(user_id: int, value: str):
+    """ Устанавливает состояние пользователя """
+    user = get_user_by_id(user_id)
+    if not user:
+        user = User(id=user_id, state=value)
+        db.add(user)
+
+    user.state = value
+    db.commit()
+
+    return user
+
+
 def set_user_name(user_id: int, user_name: str):
     """ Устанавливает имя пользователя """
     user = get_user_by_id(user_id)
