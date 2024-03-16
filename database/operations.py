@@ -47,12 +47,28 @@ def set_user_name(user_id: int, user_name: str):
 
 
 def get_timeinfo_by_user_id(user_id: int):
-    return db.query(TimeInfo).filter(TimeInfo.user_id == user_id).first()
+    user = get_user_by_id(user_id)
+    if user:
+        time_info = user.time_info
+        return time_info
 
 
 def set_user_best_retire_time(user_id: int, best_retire_time):
     time_info = get_timeinfo_by_user_id(user_id)
+    print(time_info)
     time_info.retire_time = best_retire_time
+    db.commit()
+
+
+def set_user_best_wakeup_time(user_id: int, best_wakeup_time):
+    time_info = get_timeinfo_by_user_id(user_id)
+    time_info.wakeup_time = best_wakeup_time
+    db.commit()
+
+
+def set_user_best_duration_time(user_id: int, best_duration_time):
+    time_info = get_timeinfo_by_user_id(user_id)
+    time_info.sleep_duration = best_duration_time
     db.commit()
 
 

@@ -10,6 +10,8 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True)
+    name = Column(String(30))
+    age = Column(Integer)
     state = Column(Enum(States), default=States.START.value)
     avg_score = Column(Float)
 

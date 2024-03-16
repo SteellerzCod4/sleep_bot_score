@@ -11,3 +11,7 @@ def is_correct_time(best_time: str):
         hours, minutes = best_time.split(":")
         return hours.isdigit() and minutes.isdigit() and 0 <= int(hours) <= 23 and 0 <= int(minutes) <= 59
     return False
+
+def is_correct_duration_time(best_duration: str):
+    return best_duration.isdigit() and 6 <= int(best_duration) <= 12
+
