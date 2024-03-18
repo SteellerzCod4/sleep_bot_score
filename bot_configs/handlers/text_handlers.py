@@ -34,6 +34,7 @@ async def input_name(message: types.Message, user_id, text):
 
     operations.set_user_name(user_id, user_name)
     operations.set_user_state(user_id, States.AGE_REG)
+    operations.update_time_info_for_user(user_id, 2.22)
     await message.reply(text=msg.AGE_REG_MES)
 
 
@@ -43,7 +44,7 @@ async def input_age(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_AGE_MES)
         return
 
-    operations.set_user_name(user_id, user_age)
+    operations.set_user_age(user_id, user_age)
     operations.set_user_state(user_id, States.BEST_RETIRE_TIME_REG)
     await message.reply(text=msg.BEST_RETIRE_TIME_MES)
 

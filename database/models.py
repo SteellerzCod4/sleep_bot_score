@@ -18,7 +18,7 @@ class User(Base):
     time_info = relationship("TimeInfo", back_populates="user", foreign_keys="TimeInfo.user_id", cascade="all, delete")
 
     def __repr__(self):
-        return f"<User({self.id} {self.name})>"
+        return f"<User({self.id} {self.name} {self.age})>"
 
 
 class TimeInfo(Base):

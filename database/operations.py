@@ -41,15 +41,59 @@ def set_user_name(user_id: int, user_name: str):
         db.add(user)
 
     user.name = user_name
+    print(f"user.name: {user.name}")
     db.commit()
 
     return user
 
 
+def set_user_age(user_id: int, user_age: int):
+    """ Устанавливает возраст пользователя """
+    user = get_user_by_id(user_id)
+    if not user:
+        user = User(id=user_id, age=user_age)
+        db.add(user)
+
+    user.age = user_age
+    print(f"user.age: {user.age}")
+    print(f"user with age: {user}")
+    print(f"user.time_info: {user.time_info}")
+    db.commit()
+
+    return user
+
+
+def update_time_info_for_user(user_id: int, new_sleep_score: float):
+    try:
+        # Получаем пользователя по его идентификатору
+        user = db.query(User).filter(User.id == user_id).first()
+
+        if user:
+            # Получаем объект TimeInfo пользователя
+            time_info = user.time_info
+
+            if time_info:
+                # Обновляем значение атрибута sleep_score
+                time_info.sleep_score = new_sleep_score
+                # Сохраняем изменения в базе данных
+                db.commit()
+                print(f"time_info.sleep_score: {time_info.sleep_score}")
+            else:
+                print("Для данного пользователя отсутствует информация о времени.")
+        else:
+            print("Пользователь не найден.")
+    except Exception as e:
+        db.rollback()
+        print(f"Произошла ошибка: {e}")
+
+
 def get_timeinfo_by_user_id(user_id: int):
     user = get_user_by_id(user_id)
+    print(f"user: {user}")
+    print(f"user.name: {user.name}")
     if user:
         time_info = user.time_info
+        print(f"time_info: {time_info}")
         return time_info
 
 
@@ -57,6 +101,8 @@ def set_user_current_retire_time(user_id: int, current_retire_time):
     time_info = get_timeinfo_by_user_id(user_id)
     print(time_info)
     time_info.current_retire_time = current_retire_time
+    print(f"time_info.current_retire_time: {time_info.current_retire_time}")
+    db.add(time_info)
     db.commit()
 
 
@@ -64,6 +110,7 @@ def set_user_best_retire_time(user_id: int, best_retire_time):
     time_info = get_timeinfo_by_user_id(user_id)
     print(time_info)
     time_info.best_retire_time = best_retire_time
+    db.add(time_info)
     db.commit()
 
 
@@ -71,36 +118,42 @@ def set_user_worst_retire_time(user_id: int, worst_retire_time):
     time_info = get_timeinfo_by_user_id(user_id)
     print(time_info)
     time_info.worst_retire_time = worst_retire_time
+    db.add(time_info)
     db.commit()
 
 
 def set_user_best_wakeup_time(user_id: int, best_wakeup_time):
     time_info = get_timeinfo_by_user_id(user_id)
     time_info.best_wakeup_time = best_wakeup_time
+    db.add(time_info)
     db.commit()
 
 
 def set_user_current_wakeup_time(user_id: int, current_wakeup_time):
     time_info = get_timeinfo_by_user_id(user_id)
     time_info.current_wakeup_time = current_wakeup_time
+    db.add(time_info)
     db.commit()
 
 
 def set_user_worst_wakeup_time(user_id: int, worst_wakeup_time):
     time_info = get_timeinfo_by_user_id(user_id)
     time_info.worst_wakeup_time = worst_wakeup_time
+    db.add(time_info)
     db.commit()
 
 
 def set_user_best_duration_time(user_id: int, best_duration_time):
     time_info = get_timeinfo_by_user_id(user_id)
-    time_info.sleep_duration = best_duration_time
+    time_info.best_sleep_duration = best_duration_time
+    db.add(time_info)
     db.commit()
 
 
 def set_user_sleep_score(user_id: int, sleep_score):
     time_info = get_timeinfo_by_user_id(user_id)
     time_info.sleep_score = sleep_score
+    db.add(time_info)
     db.commit()
 
 
@@ -109,6 +162,7 @@ def create_new_user(user_id: int):
     if not user:
         user = User(id=user_id, state="START")
         time_info = TimeInfo(user_id=user_id)
+        user.time_info = time_info
 
         db.add(user)
         db.add(time_info)
