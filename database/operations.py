@@ -53,22 +53,54 @@ def get_timeinfo_by_user_id(user_id: int):
         return time_info
 
 
+def set_user_current_retire_time(user_id: int, current_retire_time):
+    time_info = get_timeinfo_by_user_id(user_id)
+    print(time_info)
+    time_info.current_retire_time = current_retire_time
+    db.commit()
+
+
 def set_user_best_retire_time(user_id: int, best_retire_time):
     time_info = get_timeinfo_by_user_id(user_id)
     print(time_info)
-    time_info.retire_time = best_retire_time
+    time_info.best_retire_time = best_retire_time
+    db.commit()
+
+
+def set_user_worst_retire_time(user_id: int, worst_retire_time):
+    time_info = get_timeinfo_by_user_id(user_id)
+    print(time_info)
+    time_info.worst_retire_time = worst_retire_time
     db.commit()
 
 
 def set_user_best_wakeup_time(user_id: int, best_wakeup_time):
     time_info = get_timeinfo_by_user_id(user_id)
-    time_info.wakeup_time = best_wakeup_time
+    time_info.best_wakeup_time = best_wakeup_time
+    db.commit()
+
+
+def set_user_current_wakeup_time(user_id: int, current_wakeup_time):
+    time_info = get_timeinfo_by_user_id(user_id)
+    time_info.current_wakeup_time = current_wakeup_time
+    db.commit()
+
+
+def set_user_worst_wakeup_time(user_id: int, worst_wakeup_time):
+    time_info = get_timeinfo_by_user_id(user_id)
+    time_info.worst_wakeup_time = worst_wakeup_time
     db.commit()
 
 
 def set_user_best_duration_time(user_id: int, best_duration_time):
     time_info = get_timeinfo_by_user_id(user_id)
     time_info.sleep_duration = best_duration_time
+    db.commit()
+
+
+def set_user_sleep_score(user_id: int, sleep_score):
+    time_info = get_timeinfo_by_user_id(user_id)
+    time_info.sleep_score = sleep_score
     db.commit()
 
 

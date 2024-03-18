@@ -3,6 +3,7 @@ from aiogram.utils import executor
 from bot_configs import dp, debug_manager
 from database import Base, engine
 from bot_configs.handlers.commands_handlers import *
+from bot_configs.handlers.callback_handlers import *
 from bot_configs.handlers.text_handlers import *
 
 DEBUG_MODE = False

@@ -26,9 +26,17 @@ class TimeInfo(Base):
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-    retire_time = Column(DateTime(timezone=True), default=func.now())
-    wakeup_time = Column(DateTime(timezone=True), default=func.now())
-    sleep_duration = Column(Float)
+
+    current_retire_time = Column(DateTime(timezone=True), default=func.now())
+    best_retire_time = Column(DateTime(timezone=True), default=func.now())
+    worst_retire_time = Column(DateTime(timezone=True), default=func.now())
+
+    current_wakeup_time = Column(DateTime(timezone=True), default=func.now())
+    best_wakeup_time = Column(DateTime(timezone=True), default=func.now())
+    worst_wakeup_time = Column(DateTime(timezone=True), default=func.now())
+
+    best_sleep_duration = Column(Float)
+
     sleep_score = Column(Float)
 
     user = relationship("User", back_populates="time_info", uselist=False)
