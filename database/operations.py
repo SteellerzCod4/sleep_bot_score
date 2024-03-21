@@ -1,5 +1,7 @@
+import datetime
+
 from database import get_db
-from database.models import User, TimeInfo
+from database.models import User, TimeInfo, TimeSettings
 from bot_configs.states import States
 
 db = get_db()
@@ -8,6 +10,15 @@ db = get_db()
 def get_user_by_id(user_id: int):
     """ Получает пользователя по его id """
     return db.query(User).filter(User.id == user_id).first()
+
+
+def get_timeinfo_by_id(timeinfo_id: int):
+    """ Получает Timeinfo юзера по его id """
+    return db.query(TimeInfo).filter(TimeInfo.id == timeinfo_id).first()
+
+def get_timesettings_by_id(user_id: int):
+    """ Получает Timeinfo юзера по его id """
+    return db.query(TimeSettings).filter(TimeSettings.user_id == user_id).first()
 
 
 def get_user_state(user_id: int):
@@ -97,6 +108,13 @@ def get_timeinfo_by_user_id(user_id: int):
         return time_info
 
 
+def create_new_timeinfo(user_id: int, current_retire_time: datetime.datetime):
+    new_timeinfo = TimeInfo(user_id=user_id, current_retire_time=current_retire_time)
+    db.add(new_timeinfo)
+    db.commit()
+    return new_timeinfo
+
+
 def set_user_current_retire_time(user_id: int, current_retire_time):
     time_info = get_timeinfo_by_user_id(user_id)
     print(time_info)
@@ -107,10 +125,8 @@ def set_user_current_retire_time(user_id: int, current_retire_time):
 
 
 def set_user_best_retire_time(user_id: int, best_retire_time):
-    time_info = get_timeinfo_by_user_id(user_id)
-    print(time_info)
-    time_info.best_retire_time = best_retire_time
-    db.add(time_info)
+    time_settings = get_timesettings_by_id(user_id)
+    time_settings.best_retire_time = best_retire_time
     db.commit()
 
 
@@ -150,10 +166,8 @@ def set_user_best_duration_time(user_id: int, best_duration_time):
     db.commit()
 
 
-def set_user_sleep_score(user_id: int, sleep_score):
-    time_info = get_timeinfo_by_user_id(user_id)
-    time_info.sleep_score = sleep_score
-    db.add(time_info)
+def set_user_sleep_score(timeinfo: TimeInfo, sleep_score):
+    timeinfo.sleep_score = sleep_score
     db.commit()
 
 
@@ -161,9 +175,7 @@ def create_new_user(user_id: int):
     user = get_user_by_id(user_id)
     if not user:
         user = User(id=user_id, state="START")
-        time_info = TimeInfo(user_id=user_id)
-        user.time_info = time_info
-
+        settings_time = TimeSettings(user_id=user_id)
+        user.current_settings_id = settings_time.id
         db.add(user)
-        db.add(time_info)
         db.commit()
