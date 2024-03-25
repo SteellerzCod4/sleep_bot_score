@@ -13,28 +13,37 @@ import datetime
 async def call_back_data(callback: types.CallbackQuery):
     data = callback.data
     user_id = callback.from_user.id
-    kb, button_text, *params = data.split(ikb.SEPARATOR)
-    if kb == States.GO_TO_SLEEP.value:
-        time_info_id = params[0]
-        if button_text == msg.END_SLEEP_CALLBACK:
-            current_wakeup_time = datetime.datetime.now().strftime("%H:%M")
+    kb_type, button_text, *params = data.split(ikb.SEPARATOR)
 
-            time_info = operations.get_timeinfo_by_id(time_info_id)
-            time_settings = operations.get_timesettings_by_user_id(user_id)
+    handle_kb_functions = {
+        States.GO_TO_SLEEP.value: process_go_to_sleep_kb
+    }
 
-            sleep_score = f1_sleep_score(current_wakeup_time, time_info, time_settings, 3)
-            print(f"sleep_score: {sleep_score}")
+    function = handle_kb_functions.get(kb_type)
+    if function:
+        await function(callback, button_text, params[0], user_id)
 
-            operations.set_user_sleep_score(time_info, sleep_score)
-            operations.set_user_state(user_id, States.START)
 
-            await callback.answer(text=msg.SLEEP_SCORE_ACHIEVED_MES + str(sleep_score))
+async def process_go_to_sleep_kb(callback: types.CallbackQuery, button_text, params, user_id):
+    time_info_id = params
+    if button_text == msg.END_SLEEP_CALLBACK:
+        current_wakeup_time = datetime.datetime.now().strftime("%H:%M")
 
-        elif button_text == msg.CANCEL_SLEEP_CALLBACK:
-            operations.set_user_state(user_id, States.START)
-            print("тута")
-            await callback.answer(text=msg.CANCELED_SLEEP_MES)
+        time_info = operations.get_timeinfo_by_id(time_info_id)
+        time_settings = operations.get_timesettings_by_user_id(user_id)
 
+        sleep_score = f1_sleep_score(current_wakeup_time, time_info, time_settings, 3)
+        print(f"sleep_score: {sleep_score}")
+
+        operations.set_user_sleep_score(time_info, sleep_score)
+        operations.set_user_state(user_id, States.START)
+
+        await callback.answer(text=msg.SLEEP_SCORE_ACHIEVED_MES + str(sleep_score))
+
+    elif button_text == msg.CANCEL_SLEEP_CALLBACK:
+        operations.set_user_state(user_id, States.START)
+        print("тута")
+        await callback.answer(text=msg.CANCELED_SLEEP_MES)
 
 # if __name__ == "__main__":
 #     print(datetime.datetime.now().strftime("%H:%M"))
