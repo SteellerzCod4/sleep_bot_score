@@ -12,7 +12,8 @@ import datetime
 
 async def input_sleep_time(message: types.Message):
     current_retire_time = datetime.datetime.now().strftime("%H:%M")
-    new_time_info = operations.create_new_timeinfo(message.from_user.id, current_retire_time)
+    new_time_info = operations.create_new_time_info(message.from_user.id)
+    operations.set_user_current_retire_time(new_time_info.id, current_retire_time)
     await message.answer(text=msg.RETIRE_MODE_ACTIVATED, reply_markup=ikb.create_stop_sleep_keyboard(new_time_info.id))
 
 
@@ -34,7 +35,6 @@ async def input_name(message: types.Message, user_id, text):
 
     operations.set_user_name(user_id, user_name)
     operations.set_user_state(user_id, States.AGE_REG)
-    operations.update_time_info_for_user(user_id, 2.22)
     await message.reply(text=msg.AGE_REG_MES)
 
 

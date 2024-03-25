@@ -19,15 +19,16 @@ async def call_back_data(callback: types.CallbackQuery):
         if button_text == msg.END_SLEEP_CALLBACK:
             current_wakeup_time = datetime.datetime.now().strftime("%H:%M")
             time_info = operations.get_timeinfo_by_id(time_info_id)
+            time_settings = operations.get_timesettings_by_user_id(user_id)
             print(f"time_info.current_retire_time in data: {time_info.current_retire_time}")
             current_retire_time = time_info.current_retire_time
-            best_retire_time = time_info.best_retire_time
-            worst_retire_time = time_info.worst_retire_time
+            best_retire_time = time_settings.best_retire_time
+            worst_retire_time = time_settings.worst_retire_time
 
-            best_wakeup_time = time_info.best_wakeup_time
-            worst_wakeup_time = time_info.worst_wakeup_time
+            best_wakeup_time = time_settings.best_wakeup_time
+            worst_wakeup_time = time_settings.worst_wakeup_time
 
-            best_sleep_duration = time_info.best_sleep_duration
+            best_sleep_duration = time_settings.best_sleep_duration
             # TODO: переписать функцию, чтобы она принимала только объект TimeInfo
             sleep_score = f1_sleep_score(current_retire_time, worst_retire_time, best_retire_time,
                                          current_wakeup_time, worst_wakeup_time, best_wakeup_time,
