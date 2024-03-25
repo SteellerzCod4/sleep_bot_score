@@ -31,8 +31,8 @@ class TimeInfo(Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     settings_id = Column(Integer, ForeignKey("time_settings.id", ondelete="CASCADE"), nullable=False)
 
-    current_retire_time = Column(DateTime(timezone=True), default=func.now())
-    current_wakeup_time = Column(DateTime(timezone=True), default=func.now())
+    current_retire_time = Column(String)
+    current_wakeup_time = Column(String)
 
     sleep_score = Column(Float)
 
@@ -49,11 +49,11 @@ class TimeSettings(Base):
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
 
-    best_retire_time = Column(DateTime(timezone=True), default=func.now())
-    worst_retire_time = Column(DateTime(timezone=True), default=func.now())
+    best_retire_time = Column(String) #Column(DateTime(timezone=True), default=func.now())
+    worst_retire_time = Column(String)
 
-    best_wakeup_time = Column(DateTime(timezone=True), default=func.now())
-    worst_wakeup_time = Column(DateTime(timezone=True), default=func.now())
+    best_wakeup_time = Column(String)
+    worst_wakeup_time = Column(String)
 
     best_sleep_duration = Column(Float)
 

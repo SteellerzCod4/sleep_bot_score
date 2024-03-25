@@ -33,7 +33,7 @@ async def call_back_data(callback: types.CallbackQuery):
             sleep_score = f1_sleep_score(current_retire_time, worst_retire_time, best_retire_time,
                                          current_wakeup_time, worst_wakeup_time, best_wakeup_time,
                                          best_sleep_duration, 3)
-
+            print(f"sleep_score: {sleep_score}")
             operations.set_user_sleep_score(time_info, sleep_score)
             operations.set_user_state(user_id, States.START)
             await callback.answer(text=msg.SLEEP_SCORE_ACHIEVED_MES + str(sleep_score))
