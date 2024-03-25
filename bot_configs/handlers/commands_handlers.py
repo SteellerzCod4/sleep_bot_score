@@ -14,7 +14,7 @@ async def start_(message: types.Message):
         await message.reply(msg.WELCOME)
     else:
         await message.reply(text=msg.START_REG_MES)
-        operations.set_user_state(user_id, States.NAME_REG)
+        #operations.set_user_state(user_id, States.NAME_REG)
     operations.create_new_user(message.from_user.id)
 
 

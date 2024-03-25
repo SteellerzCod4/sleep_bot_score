@@ -21,6 +21,16 @@ def get_timesettings_by_user_id(user_id: int):
     """ Получает TimeSettings юзера по его id """
     return db.query(TimeSettings).filter(TimeSettings.user_id == user_id).first()
 
+def get_timesettings_by_id(user_id):
+    user = get_user_by_id(user_id)
+    print(f"user: {user}")
+    current_settings_id = user.current_settings_id
+    print(f"current_settings_id: {current_settings_id}")
+    time_settings = db.query(TimeSettings).filter(TimeSettings.id == current_settings_id).first()
+    print(f"type(time_settings): {type(time_settings)}")
+    print(f"time_settings: {time_settings}")
+    return time_settings
+
 
 def get_user_state(user_id: int):
     """ Получает состояние пользователя """
@@ -100,7 +110,8 @@ def set_user_current_retire_time(time_info_id: int, current_retire_time):
 
 
 def set_user_best_retire_time(user_id: int, best_retire_time):
-    time_settings = get_timesettings_by_user_id(user_id)
+    time_settings = get_timesettings_by_id(user_id)
+    print(f"time_settings: {time_settings}")
     time_settings.best_retire_time = best_retire_time
     db.commit()
 
@@ -144,8 +155,13 @@ def set_user_sleep_score(timeinfo: TimeInfo, sleep_score):
 def create_new_user(user_id: int):
     user = get_user_by_id(user_id)
     if not user:
-        user = User(id=user_id, state="START")
+        user = User(id=user_id, state="NAME_REG")
         settings_time = TimeSettings(user_id=user_id)
+        db.add(settings_time)
+        db.commit()
+        print(f"settings_time: {settings_time}")
         user.current_settings_id = settings_time.id
+        print(f"user.current_settings_id: {user.current_settings_id}")
+        print(f"user.time_settings: {user.time_settings}")
         db.add(user)
         db.commit()

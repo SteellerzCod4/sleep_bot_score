@@ -57,6 +57,9 @@ class TimeSettings(Base):
 
     best_sleep_duration = Column(Float)
 
-    user = relationship("User", back_populates="time_settings", uselist=False)
+    user = relationship("User", back_populates="time_settings", foreign_keys=[user_id], uselist=False)
     time_info = relationship("TimeInfo", back_populates="time_settings", foreign_keys="TimeInfo.settings_id",
                              cascade="all, delete")
+
+    def __repr__(self):
+        return f"<TimeSettings({self.id} {self.user_id})>"
