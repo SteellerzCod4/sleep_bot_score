@@ -49,7 +49,7 @@ async def process_edit_keyboard(message: types.Message, user_id, state: States):
     new_state = button2state.get(button_text)
     if new_state:
         operations.set_user_state(user_id, new_state)
-        await message.answer(text=msg.EDITING_MODE_ACTIVATED)
+        await message.answer(text=msg.PLS_INPUT_NEW_VALUE, reply_markup=tkb.ReplyKeyboardRemove())
 
 
 async def input_name(message: types.Message, user_id, text):
@@ -58,12 +58,16 @@ async def input_name(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_NAME_MES)
         return
 
-    next_state = States.START if operations.get_user_attr(user_id, "name") else States.AGE_REG
+    attr_is_already_exists = operations.get_user_attr(user_id, "name")
+
+    next_state = States.START if attr_is_already_exists else States.AGE_REG
+    next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.AGE_REG_MES
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
 
     operations.set_user_name(user_id, user_name)
     operations.set_user_state(user_id, next_state)
 
-    await message.reply(text=msg.AGE_REG_MES)
+    await message.answer(text=next_message, reply_markup=next_kb)
 
 
 async def input_age(message: types.Message, user_id, text):

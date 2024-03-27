@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 import bot_configs.messages as msg
 
 # ----------------BUTTONS-----------------------------------------------------------------------------------------------
@@ -20,5 +20,5 @@ main_menu_kb = ReplyKeyboardMarkup(resize_keyboard=True)
 main_menu_kb.add(button_go_asleep).add(button_edit).add(button_stats)
 
 edit_time_kb = ReplyKeyboardMarkup(resize_keyboard=True)
-edit_time_kb.add(button_edit_best_ret_time).add(button_edit_worst_ret_time).add(
+edit_time_kb.add(button_edit_name).add(button_edit_age).add(button_edit_best_ret_time).add(button_edit_worst_ret_time).add(
     button_edit_best_wakeup_time).add(button_edit_worst_wakeup_time).add(button_edit_sleep_duration_time)
