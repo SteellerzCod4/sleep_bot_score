@@ -18,8 +18,14 @@ async def input_sleep_time(message: types.Message):
 
 
 async def choose_time_to_edit(message: types.Message):
-    operations.set_user_state(message.from_user.id, States.EDITING)
-    await message.answer(text=msg.EDITING_MODE_ACTIVATED, reply_markup=tkb.edit_time_kb)
+    user_id = message.from_user.id
+    operations.set_user_state(user_id, States.EDITING)
+    user_attrs = [operations.get_user_attr(user_id, user_attr) for user_attr in ["name", "age"]]
+    time_setting_attrs = [operations.get_user_time_settings_attr(user_id, setting_attr) for setting_attr in
+                          ["best_retire_time", "worst_retire_time", "best_wakeup_time", "worst_wakeup_time",
+                           "best_sleep_duration"]]
+    all_attrs = user_attrs + time_setting_attrs
+    await message.answer(text=msg.EDITING_MODE_ACTIVATED.format(*all_attrs), reply_markup=tkb.edit_time_kb)
 
 
 async def process_main_keyboard(message: types.Message, user_id, state: States):
@@ -59,10 +65,10 @@ async def input_name(message: types.Message, user_id, text):
         return
 
     attr_is_already_exists = operations.get_user_attr(user_id, "name")
-
+    print(f"attr_is_already_exists name: {attr_is_already_exists}")
     next_state = States.START if attr_is_already_exists else States.AGE_REG
     next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.AGE_REG_MES
-    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else tkb.ReplyKeyboardRemove()
 
     operations.set_user_name(user_id, user_name)
     operations.set_user_state(user_id, next_state)
@@ -110,7 +116,7 @@ async def input_worst_retire_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
-    attr_is_already_exists = operations.get_user_time_settings_attr(user_id,  "worst_retire_time")
+    attr_is_already_exists = operations.get_user_time_settings_attr(user_id, "worst_retire_time")
     next_state = States.START if attr_is_already_exists else States.BEST_WAKEUP_TIME_REG
     next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.BEST_WAKEUP_TIME_MES
     next_kb = tkb.main_menu_kb if attr_is_already_exists else None
@@ -164,7 +170,7 @@ async def input_best_duration_time(message: types.Message, user_id, text):
     attr_is_already_exists = operations.get_user_time_settings_attr(user_id, "best_sleep_duration")
     next_state = States.START if attr_is_already_exists else States.START
     next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.REG_COMPLETE_MES
-    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else tkb.main_menu_kb
 
     operations.set_user_best_duration_time(user_id, best_duration_time)
     operations.set_user_state(user_id, next_state)
