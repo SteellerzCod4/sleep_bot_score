@@ -1,6 +1,7 @@
 import bot_configs.keyboards.text_keyboards as tkb
 import bot_configs.keyboards.inline_keyboards as ikb
 import bot_configs.messages as msg
+import numpy as np
 from aiogram import types
 from bot_configs import dp
 import database.operations as operations
@@ -28,10 +29,31 @@ async def choose_time_to_edit(message: types.Message):
     await message.answer(text=msg.EDITING_MODE_ACTIVATED.format(*all_attrs), reply_markup=tkb.edit_time_kb)
 
 
+async def show_statistic(message: types.Message):
+    all_time_infos = operations.get_timeinfo_by_user_id(message.from_user.id)
+
+    if all_time_infos:
+        all_sleep_scores = np.array([time_info.sleep_score for time_info in all_time_infos])
+        count = all_sleep_scores.shape[0]
+        max_val = np.max(all_sleep_scores)
+        min_val = np.min(all_sleep_scores)
+        mean_val = np.mean(all_sleep_scores)
+        std_val = np.std(all_sleep_scores)
+        first_quartile = np.percentile(all_sleep_scores, 25)
+        second_quartile = np.percentile(all_sleep_scores, 50)
+        third_quartile = np.percentile(all_sleep_scores, 75)
+        await message.answer(
+            text=msg.YOUR_STATISTIC_MES.format(count, mean_val, std_val, min_val, first_quartile, second_quartile,
+                                               third_quartile, max_val))
+    else:
+        await message.answer(text=msg.NO_STATISTIC_YET_MES)
+
+
 async def process_main_keyboard(message: types.Message, user_id, state: States):
     handle_functions = {
         msg.BUTTON_GO_ASLEEP: input_sleep_time,
-        msg.BUTTON_EDIT: choose_time_to_edit
+        msg.BUTTON_EDIT: choose_time_to_edit,
+        msg.BUTTON_STATS: show_statistic
     }
 
     function = handle_functions.get(state)
@@ -65,7 +87,6 @@ async def input_name(message: types.Message, user_id, text):
         return
 
     attr_is_already_exists = operations.get_user_attr(user_id, "name")
-    print(f"attr_is_already_exists name: {attr_is_already_exists}")
     next_state = States.START if attr_is_already_exists else States.AGE_REG
     next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.AGE_REG_MES
     next_kb = tkb.main_menu_kb if attr_is_already_exists else tkb.ReplyKeyboardRemove()
@@ -193,7 +214,7 @@ async def handle_messages(message: types.Message):
         States.WORST_WAKEUP_TIME_REG: input_worst_wakeup_time,
         States.BEST_DURATION_TIME_REG: input_best_duration_time,
         States.START: process_main_keyboard,
-        States.EDITING: process_edit_keyboard,
+        States.EDITING: process_edit_keyboard
     }
 
     function = handle_functions.get(state)

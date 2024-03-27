@@ -24,11 +24,9 @@ async def call_back_data(callback: types.CallbackQuery):
         await function(callback, button_text, params[0], user_id)
 
 
-async def process_go_to_sleep_kb(callback: types.CallbackQuery, button_text, params, user_id):
-    time_info_id = params
+async def process_go_to_sleep_kb(callback: types.CallbackQuery, button_text, time_info_id, user_id):
     if button_text == msg.END_SLEEP_CALLBACK:
         current_wakeup_time = datetime.datetime.now().strftime("%H:%M")
-
         time_info = operations.get_timeinfo_by_id(time_info_id)
         time_settings = operations.get_timesettings_by_user_id(user_id)
 
@@ -41,8 +39,8 @@ async def process_go_to_sleep_kb(callback: types.CallbackQuery, button_text, par
         await callback.answer(text=msg.SLEEP_SCORE_ACHIEVED_MES + str(sleep_score))
 
     elif button_text == msg.CANCEL_SLEEP_CALLBACK:
+        operations.delete_time_info_by_id(time_info_id)
         operations.set_user_state(user_id, States.START)
-        print("тута")
         await callback.answer(text=msg.CANCELED_SLEEP_MES)
 
 # if __name__ == "__main__":

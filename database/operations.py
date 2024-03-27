@@ -17,6 +17,11 @@ def get_timeinfo_by_id(timeinfo_id: int):
     """ Получает Timeinfo юзера по его id """
     return db.query(TimeInfo).filter(TimeInfo.id == timeinfo_id).first()
 
+def delete_time_info_by_id(timeinfo_id: int):
+    time_info = get_timeinfo_by_id(timeinfo_id)
+    db.delete(time_info)
+    db.commit()
+
 
 def get_timesettings_by_user_id(user_id: int):
     """ Получает TimeSettings юзера по его id """
@@ -25,12 +30,8 @@ def get_timesettings_by_user_id(user_id: int):
 
 def get_timesettings_by_id(user_id):
     user = get_user_by_id(user_id)
-    print(f"user: {user}")
     current_settings_id = user.current_settings_id
-    print(f"current_settings_id: {current_settings_id}")
     time_settings = db.query(TimeSettings).filter(TimeSettings.id == current_settings_id).first()
-    print(f"type(time_settings): {type(time_settings)}")
-    print(f"time_settings: {time_settings}")
     return time_settings
 
 
@@ -56,11 +57,8 @@ def get_user_time_settings_attr(user_id: int, attr_name: str):
 
 def get_timeinfo_by_user_id(user_id: int):
     user = get_user_by_id(user_id)
-    print(f"user: {user}")
-    print(f"user.name: {user.name}")
     if user:
         time_info = user.time_info
-        print(f"time_info: {time_info}")
         return time_info
 
 
