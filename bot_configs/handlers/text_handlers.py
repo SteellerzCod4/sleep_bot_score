@@ -76,12 +76,15 @@ async def input_age(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_AGE_MES)
         return
 
-    next_state = States.START if operations.get_user_attr(user_id, "age") else States.BEST_RETIRE_TIME_REG
+    attr_is_already_exists = operations.get_user_attr(user_id, "age")
+    next_state = States.START if attr_is_already_exists else States.BEST_RETIRE_TIME_REG
+    next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.BEST_RETIRE_TIME_MES
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
 
     operations.set_user_age(user_id, user_age)
     operations.set_user_state(user_id, next_state)
 
-    await message.reply(text=msg.BEST_RETIRE_TIME_MES)
+    await message.answer(text=next_message, reply_markup=next_kb)
 
 
 async def input_best_retire_time(message: types.Message, user_id, text):
@@ -90,13 +93,15 @@ async def input_best_retire_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
-    next_state = States.START if operations.get_user_time_settings_attr(user_id,
-                                                                        "best_retire_time") else States.WORST_RETIRE_TIME_REG
+    attr_is_already_exists = operations.get_user_time_settings_attr(user_id, "best_retire_time")
+    next_state = States.START if attr_is_already_exists else States.WORST_RETIRE_TIME_REG
+    next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.LATEST_RETIRE_TIME_MES
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
 
     operations.set_user_best_retire_time(user_id, best_retire_time)
     operations.set_user_state(user_id, next_state)
 
-    await message.reply(text=msg.LATEST_RETIRE_TIME_MES)
+    await message.answer(text=next_message, reply_markup=next_kb)
 
 
 async def input_worst_retire_time(message: types.Message, user_id, text):
@@ -105,13 +110,15 @@ async def input_worst_retire_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
-    next_state = States.START if operations.get_user_time_settings_attr(user_id,
-                                                                        "worst_retire_time") else States.BEST_WAKEUP_TIME_REG
+    attr_is_already_exists = operations.get_user_time_settings_attr(user_id,  "worst_retire_time")
+    next_state = States.START if attr_is_already_exists else States.BEST_WAKEUP_TIME_REG
+    next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.BEST_WAKEUP_TIME_MES
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
 
     operations.set_user_worst_retire_time(user_id, worst_retire_time)
     operations.set_user_state(user_id, next_state)
 
-    await message.reply(text=msg.BEST_WAKEUP_TIME_MES)
+    await message.answer(text=next_message, reply_markup=next_kb)
 
 
 async def input_best_wakeup_time(message: types.Message, user_id, text):
@@ -120,12 +127,15 @@ async def input_best_wakeup_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
-    next_state = States.START if operations.get_user_time_settings_attr(user_id,
-                                                                        "best_wakeup_time") else States.WORST_WAKEUP_TIME_REG
+    attr_is_already_exists = operations.get_user_time_settings_attr(user_id, "best_wakeup_time")
+    next_state = States.START if attr_is_already_exists else States.WORST_WAKEUP_TIME_REG
+    next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.LATEST_WAKEUP_TIME_MES
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
 
     operations.set_user_best_wakeup_time(user_id, best_wakeup_time)
     operations.set_user_state(user_id, next_state)
-    await message.reply(text=msg.LATEST_WAKEUP_TIME_MES)
+
+    await message.answer(text=next_message, reply_markup=next_kb)
 
 
 async def input_worst_wakeup_time(message: types.Message, user_id, text):
@@ -134,12 +144,15 @@ async def input_worst_wakeup_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
-    next_state = States.START if operations.get_user_time_settings_attr(user_id,
-                                                                        "worst_wakeup_time") else States.BEST_DURATION_TIME_REG
+    attr_is_already_exists = operations.get_user_time_settings_attr(user_id, "worst_wakeup_time")
+    next_state = States.START if attr_is_already_exists else States.BEST_DURATION_TIME_REG
+    next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.BEST_DURATION_TIME_MES
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
 
     operations.set_user_worst_wakeup_time(user_id, worst_wakeup_time)
     operations.set_user_state(user_id, next_state)
-    await message.reply(text=msg.BEST_DURATION_TIME_MES)
+
+    await message.answer(text=next_message, reply_markup=next_kb)
 
 
 async def input_best_duration_time(message: types.Message, user_id, text):
@@ -148,12 +161,15 @@ async def input_best_duration_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_DURATION_TIME_MES)
         return
 
-    next_state = States.START if operations.get_user_time_settings_attr(user_id,
-                                                                        "best_sleep_duration") else States.START
+    attr_is_already_exists = operations.get_user_time_settings_attr(user_id, "best_sleep_duration")
+    next_state = States.START if attr_is_already_exists else States.START
+    next_message = msg.REG_COMPLETE_MES if attr_is_already_exists else msg.REG_COMPLETE_MES
+    next_kb = tkb.main_menu_kb if attr_is_already_exists else None
 
     operations.set_user_best_duration_time(user_id, best_duration_time)
     operations.set_user_state(user_id, next_state)
-    await message.reply(text=msg.REG_COMPLETE_MES, reply_markup=tkb.main_menu_kb)
+
+    await message.answer(text=next_message, reply_markup=next_kb)
 
 
 @dp.message_handler()
