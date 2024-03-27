@@ -44,6 +44,16 @@ def get_user_state(user_id: int):
     return States(user.state)
 
 
+def get_user_attr(user_id: int, attr_name: str):
+    user = get_user_by_id(user_id)
+    return getattr(user, attr_name, None)
+
+
+def get_user_time_settings_attr(user_id: int, attr_name: str):
+    time_settings = get_timesettings_by_user_id(user_id)
+    return getattr(time_settings, attr_name, None)
+
+
 def get_timeinfo_by_user_id(user_id: int):
     user = get_user_by_id(user_id)
     print(f"user: {user}")
@@ -52,6 +62,7 @@ def get_timeinfo_by_user_id(user_id: int):
         time_info = user.time_info
         print(f"time_info: {time_info}")
         return time_info
+
 
 
 # ============================= Setters =============================

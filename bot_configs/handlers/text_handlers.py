@@ -17,14 +17,39 @@ async def input_sleep_time(message: types.Message):
     await message.answer(text=msg.RETIRE_MODE_ACTIVATED, reply_markup=ikb.create_stop_sleep_keyboard(new_time_info.id))
 
 
+async def choose_time_to_edit(message: types.Message):
+    operations.set_user_state(message.from_user.id, States.EDITING)
+    await message.answer(text=msg.EDITING_MODE_ACTIVATED, reply_markup=tkb.edit_time_kb)
+
+
 async def process_main_keyboard(message: types.Message, user_id, state: States):
     handle_functions = {
-        msg.BUTTON_GO_ASLEEP: input_sleep_time
+        msg.BUTTON_GO_ASLEEP: input_sleep_time,
+        msg.BUTTON_EDIT: choose_time_to_edit
     }
 
     function = handle_functions.get(state)
     if function:
         await function(message)
+
+
+async def process_edit_keyboard(message: types.Message, user_id, state: States):
+    button_text = message.text
+
+    button2state = {
+        msg.BUTTON_EDIT_NAME: States.NAME_REG,
+        msg.BUTTON_EDIT_AGE: States.AGE_REG,
+        msg.BUTTON_EDIT_WORST_RET_TIME: States.WORST_RETIRE_TIME_REG,
+        msg.BUTTON_EDIT_BEST_RET_TIME: States.BEST_RETIRE_TIME_REG,
+        msg.BUTTON_EDIT_WORST_WAKEUP_TIME: States.WORST_WAKEUP_TIME_REG,
+        msg.BUTTON_EDIT_BEST_WAKEUP_TIME: States.BEST_WAKEUP_TIME_REG,
+        msg.BUTTON_EDIT_SLEEP_DURATION_TIME: States.BEST_DURATION_TIME_REG
+    }
+
+    new_state = button2state.get(button_text)
+    if new_state:
+        operations.set_user_state(user_id, new_state)
+        await message.answer(text=msg.EDITING_MODE_ACTIVATED)
 
 
 async def input_name(message: types.Message, user_id, text):
@@ -33,8 +58,11 @@ async def input_name(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_NAME_MES)
         return
 
+    next_state = States.START if operations.get_user_attr(user_id, "name") else States.AGE_REG
+
     operations.set_user_name(user_id, user_name)
-    operations.set_user_state(user_id, States.AGE_REG)
+    operations.set_user_state(user_id, next_state)
+
     await message.reply(text=msg.AGE_REG_MES)
 
 
@@ -44,8 +72,11 @@ async def input_age(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_AGE_MES)
         return
 
+    next_state = States.START if operations.get_user_attr(user_id, "age") else States.BEST_RETIRE_TIME_REG
+
     operations.set_user_age(user_id, user_age)
-    operations.set_user_state(user_id, States.BEST_RETIRE_TIME_REG)
+    operations.set_user_state(user_id, next_state)
+
     await message.reply(text=msg.BEST_RETIRE_TIME_MES)
 
 
@@ -55,8 +86,12 @@ async def input_best_retire_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
+    next_state = States.START if operations.get_user_time_settings_attr(user_id,
+                                                                        "best_retire_time") else States.WORST_RETIRE_TIME_REG
+
     operations.set_user_best_retire_time(user_id, best_retire_time)
-    operations.set_user_state(user_id, States.WORST_RETIRE_TIME_REG)
+    operations.set_user_state(user_id, next_state)
+
     await message.reply(text=msg.LATEST_RETIRE_TIME_MES)
 
 
@@ -66,8 +101,12 @@ async def input_worst_retire_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
+    next_state = States.START if operations.get_user_time_settings_attr(user_id,
+                                                                        "worst_retire_time") else States.BEST_WAKEUP_TIME_REG
+
     operations.set_user_worst_retire_time(user_id, worst_retire_time)
-    operations.set_user_state(user_id, States.BEST_WAKEUP_TIME_REG)
+    operations.set_user_state(user_id, next_state)
+
     await message.reply(text=msg.BEST_WAKEUP_TIME_MES)
 
 
@@ -77,8 +116,11 @@ async def input_best_wakeup_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
+    next_state = States.START if operations.get_user_time_settings_attr(user_id,
+                                                                        "best_wakeup_time") else States.WORST_WAKEUP_TIME_REG
+
     operations.set_user_best_wakeup_time(user_id, best_wakeup_time)
-    operations.set_user_state(user_id, States.WORST_WAKEUP_TIME_REG)
+    operations.set_user_state(user_id, next_state)
     await message.reply(text=msg.LATEST_WAKEUP_TIME_MES)
 
 
@@ -88,8 +130,11 @@ async def input_worst_wakeup_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_TIME_MES)
         return
 
+    next_state = States.START if operations.get_user_time_settings_attr(user_id,
+                                                                        "worst_wakeup_time") else States.BEST_DURATION_TIME_REG
+
     operations.set_user_worst_wakeup_time(user_id, worst_wakeup_time)
-    operations.set_user_state(user_id, States.BEST_DURATION_TIME_REG)
+    operations.set_user_state(user_id, next_state)
     await message.reply(text=msg.BEST_DURATION_TIME_MES)
 
 
@@ -99,8 +144,11 @@ async def input_best_duration_time(message: types.Message, user_id, text):
         await message.reply(text=msg.WARNING_DURATION_TIME_MES)
         return
 
+    next_state = States.START if operations.get_user_time_settings_attr(user_id,
+                                                                        "best_sleep_duration") else States.START
+
     operations.set_user_best_duration_time(user_id, best_duration_time)
-    operations.set_user_state(user_id, States.START)
+    operations.set_user_state(user_id, next_state)
     await message.reply(text=msg.REG_COMPLETE_MES, reply_markup=tkb.main_menu_kb)
 
 
@@ -118,7 +166,8 @@ async def handle_messages(message: types.Message):
         States.BEST_WAKEUP_TIME_REG: input_best_wakeup_time,
         States.WORST_WAKEUP_TIME_REG: input_worst_wakeup_time,
         States.BEST_DURATION_TIME_REG: input_best_duration_time,
-        States.START: process_main_keyboard  # добавить все остальные состояния
+        States.START: process_main_keyboard,
+        States.EDITING: process_edit_keyboard,
     }
 
     function = handle_functions.get(state)

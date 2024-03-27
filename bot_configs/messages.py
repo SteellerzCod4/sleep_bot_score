@@ -16,9 +16,22 @@ WARNING_DURATION_TIME_MES = "Значение продолжительности
 
 REG_COMPLETE_MES = "Регистрация успешно завершена. Вы всегда можете изменить указанные значения в меню 'Редактирование'."
 
+
+# MAIN MENU KB
 BUTTON_GO_ASLEEP = "ПОЙТИ СПАТЬ"
 BUTTON_EDIT = "РЕДАКТИРОВАНИЕ"
 BUTTON_STATS = "СТАТИСТИКА"
+
+# EDIT KB
+BUTTON_EDIT_ALL = "Ввести всё заново"
+BUTTON_EDIT_NAME = "Имя пользователя"
+BUTTON_EDIT_AGE = "Возраст пользователя"
+BUTTON_EDIT_WORST_RET_TIME = "Худшее время засыпания"
+BUTTON_EDIT_BEST_RET_TIME = "Лучшее время засыпания"
+BUTTON_EDIT_WORST_WAKEUP_TIME = "Худшее время пробуждения"
+BUTTON_EDIT_BEST_WAKEUP_TIME = "Лучшее время засыпания"
+BUTTON_EDIT_SLEEP_DURATION_TIME = "Продолжительность сна"
+
 
 INLINE_BUTTON_END_SLEEP = "Завершить сон"
 END_SLEEP_CALLBACK = "END_SLEEP_CALLBACK"
@@ -26,6 +39,7 @@ INLINE_BUTTON_CANCEL_SLEEP = "Отменить сон"
 CANCEL_SLEEP_CALLBACK = "CANCEL_SLEEP_CALLBACK"
 
 RETIRE_MODE_ACTIVATED = "Время засыпания успешно внесено. После пробуждения выберите кнопку 'Завершить сон'. Если хотите отменить внесенное время засыпания нажимите 'Отменить сон'."
+EDITING_MODE_ACTIVATED = "Выберите параметр, который вы хотели бы изменить"
 
 SLEEP_SCORE_ACHIEVED_MES = "Сегодня ваш <b>SleepScore</b> равен: "
 CANCELED_SLEEP_MES = "Если хотите ввести новое время засыпания, для этого достаточно еще раз нажать в 'ПОЙТИ СПАТЬ' в желаемое для вас время."
